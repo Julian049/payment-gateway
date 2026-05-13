@@ -10,5 +10,6 @@ import java.util.UUID;
 public class TransactionRequestDTO {
     private String cardNumber;
     private double amount;
+    private String cvv;
     private UUID merchantId;
 }

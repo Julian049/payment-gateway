@@ -2,10 +2,12 @@ package co.edu.uptc.paymentgateway.client;
 
 import co.edu.uptc.paymentgateway.model.dto.external.MastercardDTO;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestClient;
 
 import java.util.Map;
 
+@Service
 public class MastercardApiClient {
     private final RestClient restClient;
 
@@ -13,7 +15,7 @@ public class MastercardApiClient {
         this.restClient = restClient;
     }
 
-    public MastercardDTO getMastercardDTO(int number, byte cvv) {
+    public MastercardDTO getMastercardDTO(String number, String cvv) {
         Map<String, Object> body = Map.of(
                 "numero_tarjeta", number,
                 "cvv", cvv

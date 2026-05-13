@@ -15,7 +15,7 @@ public class VisaApiClient {
         this.restClient = restClient;
     }
 
-    public VisaDTO getVisaDTO(int number, byte cvv) {
+    public VisaDTO getVisaDTO(String number, String cvv) {
         Map<String, Object> body = Map.of(
                 "numero_tarjeta", number,
                 "cvv", cvv
