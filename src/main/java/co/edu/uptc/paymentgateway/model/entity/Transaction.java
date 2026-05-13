@@ -29,7 +29,7 @@ public class Transaction {
     @Column(nullable = false)
     private double amount;
 
-    @Column(name = "card_brand", nullable = false)
+    @Column(name = "card_brand")
     private String cardBrand;
 
     @Enumerated(EnumType.STRING)
