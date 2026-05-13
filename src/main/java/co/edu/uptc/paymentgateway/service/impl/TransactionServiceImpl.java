@@ -1,7 +1,8 @@
 package co.edu.uptc.paymentgateway.service.impl;
 
 import co.edu.uptc.paymentgateway.mapper.TransactionMapper;
-import co.edu.uptc.paymentgateway.model.dto.TransactionDTO;
+import co.edu.uptc.paymentgateway.model.dto.TransactionRequestDTO;
+import co.edu.uptc.paymentgateway.model.dto.TransactionResponseDTO;
 import co.edu.uptc.paymentgateway.repository.TransactionRepository;
 import co.edu.uptc.paymentgateway.service.TransactionService;
 import org.springframework.stereotype.Service;
@@ -18,7 +19,7 @@ public class TransactionServiceImpl implements TransactionService {
     }
 
     @Override
-    public TransactionDTO executePayment(TransactionDTO dto) {
+    public TransactionResponseDTO executePayment(TransactionRequestDTO dto) {
         return null;
     }
 }

@@ -1,6 +1,7 @@
 package co.edu.uptc.paymentgateway.controller;
 
-import co.edu.uptc.paymentgateway.model.dto.TransactionDTO;
+import co.edu.uptc.paymentgateway.model.dto.TransactionRequestDTO;
+import co.edu.uptc.paymentgateway.model.dto.TransactionResponseDTO;
 import co.edu.uptc.paymentgateway.service.TransactionService;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -18,7 +19,7 @@ public class TransactionController {
     }
 
     @GetMapping
-    public TransactionDTO executePayment(@RequestBody TransactionDTO transactionDTO) {
+    public TransactionResponseDTO executePayment(@RequestBody TransactionRequestDTO transactionDTO) {
         return  service.executePayment(transactionDTO);
     }
 
