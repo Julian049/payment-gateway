@@ -38,10 +38,15 @@ public class TransactionServiceImpl implements TransactionService {
         }
         validateCardNumber(dto.getCardNumber(), dto.getCvv());
         Transaction transaction = createInitialTransaction(dto);
-        processRouting(transaction, dto.getCardNumber(), dto.getCvv());
-        transactionRepository.save(transaction);
-        return mapper.toResponseDTO(transaction);
-
+        try{
+            processRouting(transaction, dto.getCardNumber(), dto.getCvv());
+            transactionRepository.save(transaction);
+            return mapper.toResponseDTO(transaction);
+        } catch (PaymentTimeoutException | PaymentProviderException | InvalidCardException ex) {
+            transaction.setTransactionStatus(TransactionStatus.RECHAZADO);
+            transactionRepository.save(transaction);
+            throw ex;
+        }
     }
 
     private Transaction createInitialTransaction(TransactionRequestDTO dto) {
