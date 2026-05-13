@@ -24,7 +24,7 @@ public class Transaction {
     private Merchant merchantId;
 
     @Column(name = "card_number", nullable = false)
-    private int cardNumber;
+    private String cardNumber;
 
     @Column(nullable = false)
     private double amount;

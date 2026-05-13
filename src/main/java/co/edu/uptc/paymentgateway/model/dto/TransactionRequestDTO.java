@@ -8,7 +8,7 @@ import java.util.UUID;
 @Getter
 @Setter
 public class TransactionRequestDTO {
-    private int cardNumber;
+    private String cardNumber;
     private double amount;
     private UUID merchantId;
 }
