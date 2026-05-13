@@ -29,22 +29,52 @@ public class TransactionServiceImpl implements TransactionService {
 
     @Override
     public TransactionResponseDTO executePayment(TransactionRequestDTO dto) {
-        VisaDTO response = visaApiClient.getVisaDTO(dto.getCardNumber(),dto.getCvv());
+        VisaDTO response = visaApiClient.getVisaDTO(dto.getCardNumber(), dto.getCvv());
         System.out.println("Respuesta" + response);
         System.out.println(response.authorized());
 
         if (merchantRepository.existsById(dto.getMerchantId())) {
+
             Transaction entity = mapper.toEntity(dto);
-            //Aca despues se pone la logica para decidir por donde se va
-            entity.setCardBrand("Visa");
+            System.out.println("Entidad inicial: " + entity);
+
+            Transaction routingTransaction = routingBrand(dto.getCardNumber(), dto.getCvv());
+            System.out.println("Enrutamiento resultado: " + routingTransaction);
+
+
             entity.setTransactionStatus(TransactionStatus.PENDIENTE);
             entity.setLiquidationStatus(LiquidationStatus.NO_LIQUIDADO);
             entity.setTransactionDate(OffsetDateTime.now());
 
-            Transaction savedEntity = transactionRepository.save(entity);
-            return mapper.toResponseDTO(savedEntity);
+//            Transaction savedEntity = transactionRepository.save(entity);
+//            return mapper.toResponseDTO(savedEntity);
+            return null;
         } else {
             return null;
         }
     }
+
+    private Transaction routingBrand(String cardNumber, String cvv) {
+        Transaction transaction = new Transaction();
+        char identifier = cardNumber.charAt(0);
+        boolean authorized = false;
+        if (identifier == '4') {
+            transaction.setCardBrand("Visa");
+            authorized = visaApiClient.getVisaDTO(cardNumber, cvv).authorized();
+        } else if (identifier == '5') {
+            transaction.setCardBrand("Mastercard");
+            authorized = mastercardApiClient.getMastercardDTO(cardNumber, cvv).authorized();
+        }
+        transaction.setTransactionStatus(verifyPay(authorized));
+        return transaction;
+    }
+
+    private TransactionStatus verifyPay(boolean isApproved) {
+        if (isApproved) {
+            return TransactionStatus.APROBADO;
+        } else {
+            return TransactionStatus.RECHAZADO;
+        }
+    }
+
 }
