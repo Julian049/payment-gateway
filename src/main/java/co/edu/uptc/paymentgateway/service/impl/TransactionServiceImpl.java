@@ -16,6 +16,7 @@ import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.time.OffsetDateTime;
+import java.util.UUID;
 
 @AllArgsConstructor
 @Service
@@ -34,28 +35,27 @@ public class TransactionServiceImpl implements TransactionService {
         System.out.println(response.authorized());
 
         if (merchantRepository.existsById(dto.getMerchantId())) {
-
-            Transaction entity = mapper.toEntity(dto);
-            System.out.println("Entidad inicial: " + entity);
-
-            Transaction routingTransaction = routingBrand(dto.getCardNumber(), dto.getCvv());
-            System.out.println("Enrutamiento resultado: " + routingTransaction);
-
-
-            entity.setTransactionStatus(TransactionStatus.PENDIENTE);
-            entity.setLiquidationStatus(LiquidationStatus.NO_LIQUIDADO);
-            entity.setTransactionDate(OffsetDateTime.now());
-
-//            Transaction savedEntity = transactionRepository.save(entity);
-//            return mapper.toResponseDTO(savedEntity);
-            return null;
+            Transaction transaction = createInitialTransaction(dto);
+            //Esto es para verificar si si se guarda la primera vez con el estado pendiente
+            try { Thread.sleep(10000); } catch (Exception e) {}
+            processRouting(transaction, dto.getCardNumber(), dto.getCvv());
+            transactionRepository.save(transaction);
+            return mapper.toResponseDTO(transaction);
         } else {
             return null;
         }
     }
 
-    private Transaction routingBrand(String cardNumber, String cvv) {
-        Transaction transaction = new Transaction();
+    private Transaction createInitialTransaction(TransactionRequestDTO dto) {
+        Transaction entity = mapper.toEntity(dto);
+        entity.setTransactionStatus(TransactionStatus.PENDIENTE);
+        entity.setLiquidationStatus(LiquidationStatus.NO_LIQUIDADO);
+        entity.setTransactionDate(OffsetDateTime.now());
+        System.out.println("Primera transaccion" + entity);
+        return transactionRepository.save(entity);
+    }
+
+    private void processRouting(Transaction transaction,String cardNumber, String cvv) {
         char identifier = cardNumber.charAt(0);
         boolean authorized = false;
         if (identifier == '4') {
@@ -65,8 +65,9 @@ public class TransactionServiceImpl implements TransactionService {
             transaction.setCardBrand("Mastercard");
             authorized = mastercardApiClient.getMastercardDTO(cardNumber, cvv).authorized();
         }
+
         transaction.setTransactionStatus(verifyPay(authorized));
-        return transaction;
+        System.out.println("Segunda transaccion" + transaction);
     }
 
     private TransactionStatus verifyPay(boolean isApproved) {
