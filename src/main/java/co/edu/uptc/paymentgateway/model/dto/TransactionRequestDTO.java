@@ -11,5 +11,4 @@ public class TransactionRequestDTO {
     private int cardNumber;
     private double amount;
     private UUID merchantId;
-    private String cardBrand;
 }
