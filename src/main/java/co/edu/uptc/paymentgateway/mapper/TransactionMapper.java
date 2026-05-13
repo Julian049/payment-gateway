@@ -16,6 +16,7 @@ public interface TransactionMapper {
     Transaction toEntity(TransactionRequestDTO requestDTO);
     @Mapping(source = "id", target = "transactionId")
     @Mapping(source = "transactionStatus", target = "status")
+    @Mapping(source = "transactionDate", target = "date")
     TransactionResponseDTO toResponseDTO(Transaction transaction);
 
     default String map(OffsetDateTime date) {
