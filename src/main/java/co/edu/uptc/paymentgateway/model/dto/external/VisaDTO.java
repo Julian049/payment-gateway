@@ -1,3 +1,11 @@
 package co.edu.uptc.paymentgateway.model.dto.external;
 
-public record VisaDTO (boolean authorized, String message) {}
+import com.fasterxml.jackson.annotation.JsonProperty;
+
+public record VisaDTO(
+        @JsonProperty("autorizado")
+        boolean authorized,
+
+        @JsonProperty("mensaje")
+        String message
+) {}

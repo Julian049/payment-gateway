@@ -1,3 +1,11 @@
 package co.edu.uptc.paymentgateway.model.dto.external;
 
-public record MastercardDTO  (boolean authorized, String message) {}
+import com.fasterxml.jackson.annotation.JsonProperty;
+
+public record MastercardDTO (
+        @JsonProperty("autorizado")
+        boolean authorized,
+
+        @JsonProperty("mensaje")
+        String message
+) {}
