@@ -1,10 +1,13 @@
 package co.edu.uptc.paymentgateway.model.entity;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import co.edu.uptc.paymentgateway.model.enums.LiquidationStatus;
+import co.edu.uptc.paymentgateway.model.enums.TransactionStatus;
+import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
+
+import java.time.OffsetDateTime;
+import java.util.UUID;
 
 @Entity
 @Getter
@@ -12,6 +15,31 @@ import lombok.Setter;
 @Table(name = "transactions")
 public class Transaction {
     @Id
-    private Long id;
+    @GeneratedValue(strategy = GenerationType.UUID)
+    @Column(name = "id")
+    private UUID id;
 
+    @ManyToOne
+    @JoinColumn(name = "merchant_id", nullable = false)
+    private Merchant merchant;
+
+    @Column(name = "card_number", nullable = false)
+    private int cardNumber;
+
+    @Column(nullable = false)
+    private double amount;
+
+    @Column(name = "card_brand", nullable = false)
+    private String cardBrand;
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "transaction_status", nullable = false)
+    private TransactionStatus transactionStatus;
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "liquidation_status", nullable = false)
+    private LiquidationStatus liquidationStatus;
+
+    @Column(name = "transaction_date", nullable = false)
+    private OffsetDateTime transactionDate;
 }
