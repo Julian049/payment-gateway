@@ -12,5 +12,4 @@ public class TransactionResponseDTO {
     private UUID transactionId;
     private TransactionStatus status;
     private String date;
-
 }

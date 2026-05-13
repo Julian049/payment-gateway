@@ -21,7 +21,7 @@ public class Transaction {
 
     @ManyToOne
     @JoinColumn(name = "merchant_id", nullable = false)
-    private Merchant merchant;
+    private Merchant merchantId;
 
     @Column(name = "card_number", nullable = false)
     private int cardNumber;
