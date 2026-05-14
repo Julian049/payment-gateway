@@ -17,10 +17,10 @@ public class MastercardApiClient {
 
     public MastercardDTO getMastercardDTO(String number, String cvv) {
         Map<String, Object> body = Map.of(
-                "numero_tarjeta", number,
-                "cvv", cvv
+                "pan", number,
+                "codigo_seguridad", cvv
         );
 
-        return restClient.post().uri("/validar").body(body).retrieve().body(MastercardDTO.class);
+        return restClient.post().uri("/procesar").body(body).retrieve().body(MastercardDTO.class);
     }
 }
