@@ -2,6 +2,7 @@ package co.edu.uptc.paymentgateway.mapper;
 
 import co.edu.uptc.paymentgateway.model.dto.TransactionRequestDTO;
 import co.edu.uptc.paymentgateway.model.dto.TransactionResponseDTO;
+import co.edu.uptc.paymentgateway.model.dto.TreasuryTransactionDTO;
 import co.edu.uptc.paymentgateway.model.entity.Transaction;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
@@ -14,10 +15,14 @@ public interface TransactionMapper {
 
     @Mapping(source = "merchantId", target = "merchantId.id")
     Transaction toEntity(TransactionRequestDTO requestDTO);
+
     @Mapping(source = "id", target = "transactionId")
     @Mapping(source = "transactionStatus", target = "status")
     @Mapping(source = "transactionDate", target = "date")
     TransactionResponseDTO toResponseDTO(Transaction transaction);
+
+    @Mapping(source = "transactionDate", target = "transactionDate")
+    TreasuryTransactionDTO toTreasuryTransactionDTO(Transaction transaction);
 
     default String map(OffsetDateTime date) {
         if (date == null) return null;
