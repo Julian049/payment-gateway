@@ -19,6 +19,14 @@ import java.util.Map;
 @RestControllerAdvice
 public class GlobalExceptionHandler {
 
+    @ExceptionHandler(InvalidTransactionOwnershipException.class)
+    public ResponseEntity<Map<String, Object>> handleInvalidTransactionOwnership(
+        InvalidTransactionOwnershipException ex) {
+
+    log.warn("InvalidTransactionOwnershipException: {}", ex.getMessage());
+    return buildResponse(ex);
+}
+
     @ExceptionHandler(InvalidDateRangeException.class)
     public ResponseEntity<Map<String, Object>> handleInvalidDateRange(
         InvalidDateRangeException ex) {
