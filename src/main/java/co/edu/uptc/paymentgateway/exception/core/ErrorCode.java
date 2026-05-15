@@ -9,7 +9,8 @@ public enum ErrorCode {
     PAYMENT_PROVIDER_ERROR("PAY-403", "Error al comunicarse con el proveedor de pago"),
     MERCHANT_NOT_FOUND("PAY-404", "la empresa no fue encontrada"),
     INVALID_CARD("PAY-405", "La tarjeta es inválida"),
-    INVALID_MERCHANT("PAY-406", "El ID de la empresa no es valido, verifique el formato");
+    INVALID_MERCHANT("PAY-406", "El ID de la empresa no es valido, verifique el formato"),
+    INVALID_DATE_RANGE("PAY-407", "El rango de fechas es invalido");
 
 
     private final String code;

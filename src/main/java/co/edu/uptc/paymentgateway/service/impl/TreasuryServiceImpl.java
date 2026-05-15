@@ -6,6 +6,7 @@ import java.util.UUID;
 
 import org.springframework.stereotype.Service;
 
+import co.edu.uptc.paymentgateway.exception.domain.InvalidDateRangeException;
 import co.edu.uptc.paymentgateway.exception.domain.MerchantNotFoundException;
 import co.edu.uptc.paymentgateway.mapper.TransactionMapper;
 import co.edu.uptc.paymentgateway.model.dto.TreasuryResponseDTO;
@@ -27,6 +28,11 @@ public class TreasuryServiceImpl implements TreasuryService {
 
     @Override
     public TreasuryResponseDTO getUnliquidatedTransactions(UUID merchantId, OffsetDateTime startDate, OffsetDateTime endDate) {
+        
+        if (startDate != null && endDate != null && startDate.isAfter(endDate)) {
+            throw new InvalidDateRangeException("La fecha de inicio no puede ser posterior a la fecha de fin.");
+        }
+        
         Merchant merchant = merchantRepository.findById(merchantId)
                 .orElseThrow(() -> new MerchantNotFoundException(merchantId));
 
