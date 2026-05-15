@@ -8,9 +8,9 @@ import co.edu.uptc.paymentgateway.exception.core.ServerException;
 public class InvalidTransactionOwnershipException extends ServerException {
     public InvalidTransactionOwnershipException() {
         super(
-                "Una o más transacciones no pertenecen al merchant indicado",
+                "Una o más transacciones no pertenecen al merchant indicado o ya han sido procesadas.",
                 ErrorCode.INVALID_TRANSACTION_OWNERSHIP,
-                HttpStatus.BAD_REQUEST
+                HttpStatus.NOT_FOUND
         );
     }
     
