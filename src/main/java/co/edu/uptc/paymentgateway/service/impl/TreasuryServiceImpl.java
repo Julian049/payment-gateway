@@ -7,16 +7,21 @@ import java.util.UUID;
 import org.springframework.stereotype.Service;
 
 import co.edu.uptc.paymentgateway.exception.domain.InvalidDateRangeException;
+import co.edu.uptc.paymentgateway.exception.domain.InvalidTransactionOwnershipException;
 import co.edu.uptc.paymentgateway.exception.domain.MerchantNotFoundException;
 import co.edu.uptc.paymentgateway.mapper.TransactionMapper;
+import co.edu.uptc.paymentgateway.model.dto.LiquidationRequestDTO;
+import co.edu.uptc.paymentgateway.model.dto.LiquidationResponseDTO;
 import co.edu.uptc.paymentgateway.model.dto.TreasuryResponseDTO;
 import co.edu.uptc.paymentgateway.model.dto.TreasuryTransactionDTO;
 import co.edu.uptc.paymentgateway.model.entity.Merchant;
 import co.edu.uptc.paymentgateway.model.entity.Transaction;
+import co.edu.uptc.paymentgateway.model.enums.LiquidationStatus;
 import co.edu.uptc.paymentgateway.repository.MerchantRepository;
 import co.edu.uptc.paymentgateway.repository.TransactionRepository;
 import co.edu.uptc.paymentgateway.service.TreasuryService;
 import co.edu.uptc.paymentgateway.specification.TransactionSpecification;
+import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 
 @AllArgsConstructor
@@ -53,4 +58,27 @@ public class TreasuryServiceImpl implements TreasuryService {
 
         return response;
     }
+
+    @Override
+    @Transactional
+    public LiquidationResponseDTO liquidate(LiquidationRequestDTO request) {
+        List<Transaction> transactions = transactionRepository
+            .findAllByIdInAndMerchantIdIdAndLiquidationStatus(
+                request.getTransactionIds(), 
+                request.getMerchantId(), 
+                LiquidationStatus.NO_LIQUIDADO);
+
+        if (transactions.size() != request.getTransactionIds().size()) {
+            throw new InvalidTransactionOwnershipException();
+        }
+
+        List<UUID> ids = transactions.stream().map(Transaction::getId).toList();
+        transactionRepository.liquidateByIds(ids);
+
+        LiquidationResponseDTO response = new LiquidationResponseDTO();
+        response.setLiquidated(ids.size());
+        response.setMessage(ids.size() + " transacciones liquidadas correctamente");
+        return response;
+    }
+
 }
