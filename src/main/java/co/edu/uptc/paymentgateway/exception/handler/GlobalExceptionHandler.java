@@ -19,6 +19,13 @@ import java.util.Map;
 @RestControllerAdvice
 public class GlobalExceptionHandler {
 
+    @ExceptionHandler(InvalidDateRangeException.class)
+    public ResponseEntity<Map<String, Object>> handleInvalidDateRange(
+        InvalidDateRangeException ex) {
+
+        log.warn("InvalidDateRangeException: {}", ex.getMessage());
+        return buildResponse(ex);
+    }
     @ExceptionHandler(UnsupportedCardBrandException.class)
     public ResponseEntity<Map<String, Object>> handleUnsupportedCardBrand(
             UnsupportedCardBrandException ex) {
